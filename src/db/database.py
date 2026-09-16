@@ -24,4 +24,8 @@ class DatabaseSessionManager:
             
 async def get_db():
     async with DatabaseSessionManager(SessionLocal) as session:
-        yield session
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
