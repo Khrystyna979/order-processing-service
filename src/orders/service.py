@@ -1,11 +1,7 @@
 from decimal import Decimal
-
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.orders.schemas import OrderCreate, OrderResponse, OrderItemCreate, OrderItemResponse
-from src.db.database import get_db
-from fastapi import Depends, HTTPException, status
-from src.db.models import Order, OrderItem, Product
+from src.orders.schemas import OrderCreate
+from fastapi import HTTPException, status
 from src.orders import repository as repository_orders
 from src.products import repository as repository_products
 
@@ -19,7 +15,7 @@ async def create_order(order_data: OrderCreate, idempotency_key: str, db: AsyncS
     total = Decimal('0')
     orderitems_data = []
     for item in order_data.items:
-        product = await repository_products.read_product(item.product_id, db)
+        product = await repository_products.read_product_for_update(item.product_id, db)
         if not product:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Product not found')
         

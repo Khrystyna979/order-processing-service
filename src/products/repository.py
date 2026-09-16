@@ -15,6 +15,11 @@ async def read_product(product_id: uuid.UUID, db: AsyncSession) -> Product | Non
     product = await db.scalar(stmt)
     return product
 
+async def read_product_for_update(product_id: uuid.UUID, db: AsyncSession) -> Product | None:
+    stmt = select(Product).where(Product.id == product_id).with_for_update()
+    product = await db.scalar(stmt)
+    return product
+
 async def create_product(body: ProductCreate, db: AsyncSession) -> Product:
     new_product = Product(**body.model_dump())
     db.add(new_product)
