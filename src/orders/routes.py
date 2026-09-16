@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Header, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from src.db.database import get_db
-from src.orders.schemas import OrderCreate, OrderResponse, OrderItemCreate, OrderItemResponse
+from src.orders.schemas import OrderCreate, OrderResponse
 from src.orders import repository as repository_orders
 import uuid
 from src.orders import service as service_orders
