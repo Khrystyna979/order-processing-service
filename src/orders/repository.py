@@ -1,12 +1,13 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from src.db.models import Order, OrderItem
 from decimal import Decimal
 import uuid
 
 async def get_order_by_idempotency_key(db: AsyncSession, key: str) -> Order | None:
-    stmt = select(Order).where(Order.idempotency_key==key)
+    stmt = select(Order).where(Order.idempotency_key==key).options(selectinload(Order.items))
     result = await db.scalar(stmt)
     return result
 
@@ -33,10 +34,10 @@ async def create_order_item(db: AsyncSession, order_id: uuid.UUID, product_id: u
 
 async def read_orders(skip: int, limit: int, db: AsyncSession) -> List[Order]:
     stmt = select(Order)
-    orders = await db.scalars(stmt.offset(skip).limit(limit))
+    orders = await db.scalars(stmt.options(selectinload(Order.items)).offset(skip).limit(limit))
     return orders.all()
 
 async def read_order(order_id: uuid.UUID, db: AsyncSession) -> Order | None:
-    stmt = select(Order).where(Order.id == order_id)
+    stmt = select(Order).where(Order.id == order_id).options(selectinload(Order.items))
     order = await db.scalar(stmt)
     return order

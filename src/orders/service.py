@@ -47,4 +47,5 @@ async def create_order(order_data: OrderCreate, idempotency_key: str, db: AsyncS
         )
         
     await db.commit()
+    await db.refresh(order, attribute_names=["items"])
     return order

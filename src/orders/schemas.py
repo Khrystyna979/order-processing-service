@@ -26,12 +26,13 @@ class OrderItemResponse(OrderItemCreate):
     
     model_config = ConfigDict(from_attributes=True)
     
-class OrderResponse(OrderCreate):
+class OrderResponse(BaseModel):
     
     id: uuid.UUID
-    items: List[OrderItemResponse]
-    total: Decimal = Field(gt=0)
-    status: str = Field(min_length=1, max_length=20, default="created")
+    customer_id: uuid.UUID
+    total: Decimal
+    status: str
     created_at: datetime
-    
+    items: List[OrderItemResponse]
+
     model_config = ConfigDict(from_attributes=True)
