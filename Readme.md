@@ -82,13 +82,13 @@ This is handled with `SELECT ... FOR UPDATE` on the product row (`read_product_f
  
 The `get_db` dependency wraps the session in a `try/except` that calls `session.rollback()` if any exception is raised while the session is in use, so a failure partway through `create_order` (e.g. the second item in a multi-item order is out of stock) does not leave partially-applied changes (like a decremented stock on an earlier item) committed to the database.
  
-## What is not implemented
+## Roadmap
 
-Due to time constraints, the following features were left out:
+Planned next steps for this project:
 
 - **Kafka & Outbox Worker** 
 - **Automated tests**
-- **Bonus features** 
+
 
 ## Screenshots
  
