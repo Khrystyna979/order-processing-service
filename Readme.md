@@ -1,6 +1,6 @@
 # Order Processing Service
  
-A test-task implementation of an order processing API built with **FastAPI** and **async SQLAlchemy 2.x**.
+An asynchronous REST API for managing products and orders, built with **FastAPI** and **async SQLAlchemy 2.x**. The service focuses on the problems that appear when several clients create orders at the same time: overselling stock, duplicate orders from repeated requests, and partially applied changes when an order fails halfway.
  
 ## Stack
  
@@ -84,11 +84,8 @@ The `get_db` dependency wraps the session in a `try/except` that calls `session.
  
 ## Roadmap
 
-Planned next steps for this project:
-
-- **Kafka & Outbox Worker** 
-- **Automated tests**
-
+- **Automated tests (pytest)** — cover the business-critical paths: concurrent order creation (no overselling), idempotent retries with the same `Idempotency-Key`, and rollback on partial failure.
+- **Kafka + Transactional Outbox** — publish an `order.created` event reliably: the event is written to an outbox table in the same transaction as the order, and a worker publishes it to Kafka, so an order is never saved without its event (and vice versa).
 
 ## Screenshots
  
